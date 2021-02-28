@@ -31,19 +31,15 @@ public class Movement : MonoBehaviour
     ProcessRotation();
 
   }
+  void ProcessRotation()
+  {
+    RotationThrusting();
+  }
   void ProcessThrust()
   {
     if (Input.GetKey(KeyCode.W))
     {
-      rb.AddRelativeForce(Vector3.up * mainThrust * Time.deltaTime);
-      if (!audioSource.isPlaying)
-      {
-        audioSource.PlayOneShot(mainEngine);
-      }
-      if (!mainBooster.isPlaying)
-      {
-        mainBooster.Play();
-      }
+      StartThrusting();
 
     }
     else
@@ -53,7 +49,22 @@ public class Movement : MonoBehaviour
     }
   }
 
-  void ProcessRotation()
+  void StartThrusting()
+  {
+    rb.AddRelativeForce(Vector3.up * mainThrust * Time.deltaTime);
+    if (!audioSource.isPlaying)
+    {
+      audioSource.PlayOneShot(mainEngine);
+    }
+    if (!mainBooster.isPlaying)
+    {
+      mainBooster.Play();
+    }
+  }
+
+
+
+  void RotationThrusting()
   {
     if (Input.GetKey(KeyCode.A))
     {
@@ -83,8 +94,7 @@ public class Movement : MonoBehaviour
     }
   }
 
-
-  private void ApplyRotation(float rotationThisFrame)
+  void ApplyRotation(float rotationThisFrame)
   {
     rb.freezeRotation = true; //Freezing rotation to manually rotate
     transform.Rotate(Vector3.forward * rotationThisFrame * Time.deltaTime);

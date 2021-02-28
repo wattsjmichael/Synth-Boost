@@ -14,20 +14,40 @@ public class CollisionHandler : MonoBehaviour
   AudioSource audioSource;
   ParticleSystem particles;
 
+
   bool isTransitioning = false;
+  bool collisionDisabled = false;
 
 
   void Start()
   {
     audioSource = GetComponent<AudioSource>();
     particles = GetComponent<ParticleSystem>();
+
+  }
+
+  void Update()
+  {
+    CheatCode();
+  }
+
+  void CheatCode()
+  {
+    if (Input.GetKeyDown(KeyCode.L))
+    {
+      NextLevel();
+    }
+    else if (Input.GetKeyDown(KeyCode.C))
+    {
+      collisionDisabled = !collisionDisabled;
+    }
   }
   void OnCollisionEnter(Collision other)
   {
-      if(isTransitioning)
-      {
-          return;
-      }
+    if (isTransitioning || collisionDisabled)
+    {
+      return;
+    }
     switch (other.gameObject.tag)
     {
       case "Friendly":
@@ -57,10 +77,10 @@ public class CollisionHandler : MonoBehaviour
 
   void CrashSequence()
   {
-   
+
     isTransitioning = true;
     audioSource.Stop();
-   explosionParticles.Play();
+    explosionParticles.Play();
     audioSource.PlayOneShot(explosion);
     GetComponent<Movement>().enabled = false;
     Invoke("ReloadLevel", crashLoadDelay);
@@ -82,4 +102,6 @@ public class CollisionHandler : MonoBehaviour
     }
     SceneManager.LoadScene(nextSceneIndex);
   }
+
+
 }
